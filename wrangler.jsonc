@@ -1,0 +1,12 @@
+{
+  // Cloudflare Workers — site estático (sem código de servidor).
+  // O build (`npm run build`) gera a pasta ./out; o `npx wrangler deploy` apenas publica os arquivos.
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "cxp-investimentos",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./out",
+    "not_found_handling": "404-page",
+    "html_handling": "auto-trailing-slash"
+  }
+}

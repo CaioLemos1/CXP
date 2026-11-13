@@ -1,11 +1,13 @@
 import type { NextConfig } from "next";
 
 /**
- * STATIC_EXPORT=1 gera um site 100% estático em /out (hospedagem em CDN,
- * S3, Netlify, cPanel etc.). Sem a variável, o build usa o servidor do
- * Next.js (recomendado na Vercel), com otimização automática de imagens.
+ * Exportação 100% estática em /out quando:
+ * - STATIC_EXPORT=1 (qualquer hospedagem estática), ou
+ * - WORKERS_CI=1 / CF_PAGES=1 (variáveis injetadas automaticamente nos builds da Cloudflare).
+ * Sem elas, o build usa o servidor do Next.js (ex.: Vercel), com otimização de imagens.
  */
-const isStaticExport = process.env.STATIC_EXPORT === "1";
+const isStaticExport =
+  process.env.STATIC_EXPORT === "1" || process.env.WORKERS_CI === "1" || process.env.CF_PAGES === "1";
 
 const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },

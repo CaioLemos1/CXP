@@ -60,6 +60,16 @@ Para os testes E2E: `npx playwright install chromium` (uma vez) **ou** aponte um
 
 ## 3. Publicação
 
+**Cloudflare Workers (recomendado, plano gratuito permite uso comercial):** o repositório já tem `wrangler.jsonc` e `public/_headers`.
+Em *Workers & Pages → cxp-investimentos → Settings → Build*:
+
+- Build command: `npm run build` (nos builds da Cloudflare a exportação estática é ativada automaticamente pela variável `WORKERS_CI`)
+- Deploy command: `npx wrangler deploy`
+- Build variable: `NEXT_PUBLIC_SITE_URL` = URL pública (o endereço `*.workers.dev` enquanto não houver domínio)
+
+Teste local do mesmo pacote: `WORKERS_CI=1 npm run build && npx wrangler dev`.
+
+
 **Vercel (recomendado):** importe o repositório, defina `NEXT_PUBLIC_SITE_URL` e publique. Imagens otimizadas (AVIF/WebP) e cabeçalhos de segurança/cache já estão configurados em `next.config.ts`.
 
 **Hospedagem estática (CDN, S3, Netlify, cPanel):**

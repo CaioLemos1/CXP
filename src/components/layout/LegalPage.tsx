@@ -13,12 +13,12 @@ export function LegalPage({ title, intro, children }: { title: string; intro: st
     <>
       <Header variant="inner" />
       <main id="conteudo" className="bg-paper text-ink">
-        <div className="bg-ink pb-16 pt-36 text-ivory sm:pb-20 sm:pt-44">
+        <div className="bg-navy pb-16 pt-36 text-white sm:pb-20 sm:pt-44">
           <div className="container-x max-w-4xl">
             <p className="eyebrow text-gold-soft">Documento legal</p>
-            <h1 className="display mt-6 text-[clamp(2.4rem,5vw,4.2rem)]">{title}</h1>
-            <p className="mt-6 max-w-2xl text-ivory/70">{intro}</p>
-            <p className="mt-8 text-xs uppercase tracking-[0.22em] text-ivory/60">
+            <h1 className="heading mt-6 text-[clamp(2.4rem,5vw,4.2rem)]">{title}</h1>
+            <p className="mt-6 max-w-2xl text-white/75">{intro}</p>
+            <p className="mt-8 text-xs uppercase tracking-[0.22em] text-white/60">
               Última atualização: {formatDateLong(siteConfig.legal.lastUpdated)}
             </p>
           </div>

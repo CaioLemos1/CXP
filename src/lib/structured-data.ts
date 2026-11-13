@@ -9,7 +9,7 @@ export function buildOrganizationJsonLd(config: SiteConfig) {
     name: config.name,
     url: config.url,
     logo: `${config.url}${config.images.logo.src}`,
-    image: `${config.url}${config.images.founder.src}`,
+    image: `${config.url}${config.images.hero.src}`,
     description: config.description,
     email: config.contact.email,
     telephone: `+${config.contact.whatsapp}`,

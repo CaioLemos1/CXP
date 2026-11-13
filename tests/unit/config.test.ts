@@ -8,7 +8,6 @@ const complete: SiteConfig = {
   url: "https://www.exemplo.com.br",
   contact: { ...siteConfig.contact, whatsappConfirmed: true, address: "Rua Exemplo, 1" },
   legal: { ...siteConfig.legal, cnpj: "00.000.000/0001-00", dataProtectionOfficer: "Fulana" },
-  images: { ...siteConfig.images, couple: { src: "/images/casal.jpg", width: 800, height: 1000 } },
 };
 
 describe("validateSiteConfig", () => {
@@ -27,14 +26,12 @@ describe("validateSiteConfig", () => {
         "contact.address",
       ]),
     );
-    expect(fields).not.toContain("images.couple");
   });
 
   it("descreve cada pendência com severidade e mensagem", () => {
     const issues = validateSiteConfig({
       ...siteConfig,
       url: "http://localhost:3000",
-      images: { ...siteConfig.images, couple: null },
     });
     expect(issues.map(({ field, severity }) => `${field}:${severity}`)).toEqual([
       "contact.whatsappConfirmed:pending",
@@ -42,7 +39,6 @@ describe("validateSiteConfig", () => {
       "legal.cnpj:pending",
       "legal.dataProtectionOfficer:pending",
       "contact.address:pending",
-      "images.couple:pending",
     ]);
     for (const issue of issues) expect(issue.message.length).toBeGreaterThan(5);
   });
@@ -94,7 +90,7 @@ describe("buildOrganizationJsonLd", () => {
       name: "CXP Crédito & Investimentos",
       url: "https://www.exemplo.com.br",
       logo: "https://www.exemplo.com.br/images/logo-cxp.png",
-      image: "https://www.exemplo.com.br/images/pedro-fonseca.jpg",
+      image: "https://www.exemplo.com.br/images/pedro-hero.jpg",
       description: complete.description,
       email: "timecpconsultoria@gmail.com",
       telephone: "+5569992579620",

@@ -46,9 +46,6 @@ export function validateSiteConfig(config: SiteConfig): ConfigIssue[] {
   if (config.contact.address === null) {
     issues.push({ field: "contact.address", severity: "pending", message: "Endereço comercial não informado." });
   }
-  if (config.images.couple === null) {
-    issues.push({ field: "images.couple", severity: "pending", message: "Fotografia do casal não recebida." });
-  }
   return issues;
 }
 

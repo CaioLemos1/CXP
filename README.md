@@ -13,7 +13,7 @@ Tudo o que é configurável fica em **`src/config/site.ts`**. Itens que não con
 
 | Campo                                                          | Situação                                                                                                                                                          | O que fazer                                                                                                                                                        |
 | -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `images.couple` | ✅ Foto do casal integrada (`public/images/casal-pedro-cristiana.jpg`). | — |
+| `images.hero` / `images.about` | ✅ Fotos do Pedro Fonseca (`public/images/pedro-hero.jpg`, `pedro-leitura.jpg`). | — |
 | `images.logo` | ✅ Logo oficial branca com fundo transparente (`public/images/logo-cxp.png`, 709×362 px). Para nitidez máxima em telas grandes, a versão SVG pode substituí-la no futuro. | — |
 | `contact.whatsappConfirmed`                                    | O número (69) 99257-9620 vem do portfólio.                                                                                                                        | Confirmar que é o WhatsApp de atendimento e mudar para `true`.                                                                                                     |
 | `url`                                                          | Usa `NEXT_PUBLIC_SITE_URL`.                                                                                                                                       | Definir o domínio oficial (ver `.env.example`).                                                                                                                    |
@@ -26,8 +26,7 @@ O teste `tests/unit/config.test.ts` lista essas pendências e falha se algum dad
 ### Conteúdo editável
 
 - `src/content/press.ts` — matérias do News Rondônia (adicione `excerpt` ou `image` só com confirmação e autorização).
-- `src/content/solutions.ts` — soluções e passo a passo do consórcio.
-- `src/content/education.ts` — conceitos de educação financeira e Bolsa de Valores.
+- `src/content/solutions.ts` — soluções e diferenciais (textos curtos).
 
 ---
 
@@ -93,16 +92,14 @@ src/
     politica-de-privacidade/  termos-e-condicoes/
   components/
     layout/               Header, Footer, LegalPage
-    sections/             HeroSection, InteractiveCXP, AboutSection, PurposeSection,
-                          SolutionsSection, InvestmentEducation, CompoundSimulator,
-                          PressSection, PressCarousel, FinalCTA
-    ui/                   WhatsAppButton, FloatingWhatsApp, Reveal, MotionProvider,
-                          SmartImage (skeleton), Icon, Logo, CurrentYear
+    sections/             HeroSection, SolutionsSection, AboutSection,
+                          DifferentialsSection, PressSection, FinalCTA
+    ui/                   WhatsAppButton, Reveal, MotionProvider, Icon, Logo, CurrentYear
   config/site.ts          configuração central (contato, WhatsApp, imagens, dados legais)
   content/                textos e dados das seções
-  lib/                    lógica pura testada: whatsapp, format, finance, press,
+  lib/                    lógica pura testada: whatsapp, format, press,
                           config-validation, structured-data
-  fonts/                  Bodoni Moda + Archivo auto-hospedadas (SIL OFL 1.1)
+  fonts/                  Playfair Display + Montserrat auto-hospedadas (SIL OFL 1.1)
 tests/
   unit/  integration/  e2e/
 scripts/                  check-links.mjs, screenshot.mjs
@@ -111,8 +108,7 @@ scripts/                  check-links.mjs, screenshot.mjs
 ### Decisões técnicas
 
 - **Fontes auto-hospedadas** (`next/font/local`): sem requisições ao Google Fonts, melhor LCP e conformidade com a LGPD.
-- **Hero sem JavaScript bloqueante:** headline com animação CSS e renderização no servidor; o efeito 3D das letras CXP é um componente cliente leve (rAF + lerp, apenas `transform`), desativado em telas de toque e com `prefers-reduced-motion`.
+- **Hero sem JavaScript bloqueante:** texto renderizado no servidor com animação CSS; foto do Pedro com prioridade de carregamento.
 - **Motion** carregado via `LazyMotion` + `domAnimation` (pacote mínimo); `MotionConfig reducedMotion="user"`.
-- **Skeleton** apenas onde existe carregamento real (fotografias).
 - **Imprensa sem imagens de capa:** não há autorização confirmada de uso; os cards são tipográficos.
-- **Simulador** é uma ferramenta educativa com taxas hipotéticas definidas pelo visitante, sem dados de rentabilidade.
+- **Visual:** azul-marinho + dourado, seguindo o modelo de referência aprovado em 13/11/2026, com textos curtos.

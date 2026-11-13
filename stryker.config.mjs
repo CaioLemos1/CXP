@@ -10,7 +10,7 @@ export default {
   mutate: [
     "src/lib/whatsapp.ts",
     "src/lib/format.ts",
-    "src/lib/finance.ts",
+
     "src/lib/press.ts",
     "src/lib/config-validation.ts",
     "src/lib/structured-data.ts",

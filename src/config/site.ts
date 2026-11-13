@@ -47,9 +47,10 @@ export type SiteConfig = {
   };
   images: {
     logo: { src: string; width: number; height: number };
-    /** Fotografia do casal (seção "Quem Somos"). `null` exibe um espaço reservado. */
-    couple: { src: string; width: number; height: number } | null;
-    founder: { src: string; width: number; height: number };
+    /** Foto principal (hero). */
+    hero: { src: string; width: number; height: number };
+    /** Foto da seção "Sobre". */
+    about: { src: string; width: number; height: number };
   };
 };
 
@@ -91,16 +92,16 @@ export const siteConfig: SiteConfig = {
   },
   images: {
     logo: { src: "/images/logo-cxp.png", width: 709, height: 362 },
-    couple: { src: "/images/casal-pedro-cristiana.jpg", width: 1170, height: 1166 },
-    founder: { src: "/images/pedro-fonseca.jpg", width: 720, height: 1280 },
+    hero: { src: "/images/pedro-hero.jpg", width: 1134, height: 1512 },
+    about: { src: "/images/pedro-leitura.jpg", width: 1134, height: 1512 },
   },
 };
 
 export const navigation = [
   { href: "#inicio", label: "Início" },
-  { href: "#quem-somos", label: "Quem Somos" },
-  { href: "#solucoes", label: "Soluções" },
-  { href: "#investimentos", label: "Investimentos" },
-  { href: "#imprensa", label: "Na Imprensa" },
+  { href: "#servicos", label: "Serviços" },
+  { href: "#sobre", label: "Sobre" },
+  { href: "#diferenciais", label: "Diferenciais" },
+  { href: "#imprensa", label: "Imprensa" },
   { href: "#contato", label: "Contato" },
 ] as const;

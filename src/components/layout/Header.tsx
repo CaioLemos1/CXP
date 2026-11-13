@@ -79,11 +79,11 @@ export function Header({ variant = "home" }: { variant?: "home" | "inner" }) {
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-500",
         scrolled || open
-          ? "border-b border-white/[0.07] bg-ink/75 backdrop-blur-xl backdrop-saturate-150"
+          ? "border-b border-white/[0.08] bg-navy/85 backdrop-blur-xl backdrop-saturate-150"
           : "border-b border-transparent bg-transparent",
       )}
     >
-      <div className="container-x flex h-[4.5rem] items-center justify-between gap-6 lg:h-20">
+      <div className="container-x flex h-[4.5rem] items-center justify-between gap-6 lg:h-[5.25rem]">
         <Link
           href={`${prefix}#inicio`}
           className="relative z-10 shrink-0"
@@ -102,8 +102,8 @@ export function Header({ variant = "home" }: { variant?: "home" | "inner" }) {
                     href={`${prefix}${item.href}`}
                     aria-current={isActive ? "true" : undefined}
                     className={cn(
-                      "relative px-3 py-2 text-[0.8rem] tracking-[0.06em] transition-colors duration-300",
-                      isActive ? "text-gold-soft" : "text-ivory/70 hover:text-ivory",
+                      "relative px-3 py-2 text-[0.85rem] font-medium transition-colors duration-300",
+                      isActive ? "text-white" : "text-white/75 hover:text-white",
                     )}
                   >
                     {item.label}
@@ -124,13 +124,13 @@ export function Header({ variant = "home" }: { variant?: "home" | "inner" }) {
         <div className="flex items-center gap-3">
           <div className="hidden sm:block">
             <WhatsAppButton trackingId="header" size="sm">
-              WhatsApp
+              Fale Conosco
             </WhatsAppButton>
           </div>
           <button
             ref={toggleRef}
             type="button"
-            className="relative z-10 inline-flex size-11 items-center justify-center rounded-full border border-white/15 text-ivory transition-colors hover:border-gold/70 lg:hidden"
+            className="relative z-10 inline-flex size-11 items-center justify-center rounded-full border border-white/20 text-white transition-colors hover:border-gold lg:hidden"
             aria-expanded={open}
             aria-controls="menu-mobile"
             aria-label={open ? "Fechar menu" : "Abrir menu"}
@@ -145,26 +145,26 @@ export function Header({ variant = "home" }: { variant?: "home" | "inner" }) {
         id="menu-mobile"
         ref={panelRef}
         hidden={!open}
-        className="fixed inset-x-0 top-[4.5rem] h-[calc(100dvh-4.5rem)] overflow-y-auto bg-ink px-6 pb-10 pt-8 lg:hidden"
+        className="fixed inset-x-0 top-[4.5rem] h-[calc(100dvh-4.5rem)] overflow-y-auto bg-navy px-6 pb-10 pt-8 lg:hidden"
       >
         <nav aria-label="Menu mobile">
-          <ul className="divide-y divide-white/[0.08] border-y border-white/[0.08]">
+          <ul className="divide-y divide-white/10 border-y border-white/10">
             {navigation.map((item, index) => (
               <li key={item.href}>
                 <a
                   href={`${prefix}${item.href}`}
                   onClick={() => setOpen(false)}
-                  className="flex items-baseline justify-between py-5 font-serif text-[1.9rem] leading-none text-ivory transition-colors hover:text-gold-soft"
+                  className="flex items-baseline justify-between py-5 font-serif text-[1.9rem] leading-none text-white transition-colors hover:text-gold-soft"
                 >
                   {item.label}
-                  <span className="font-sans text-xs tracking-[0.2em] text-mute">0{index + 1}</span>
+                  <span className="font-sans text-xs tracking-[0.2em] text-white/50">0{index + 1}</span>
                 </a>
               </li>
             ))}
           </ul>
         </nav>
         <WhatsAppButton trackingId="menu-mobile" size="lg" className="mt-10 w-full">
-          Fale com um especialista
+          Fale Conosco
         </WhatsAppButton>
       </div>
     </header>

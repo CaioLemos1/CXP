@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { PRESS_HOSTS, pressArticles } from "@/content/press";
-import { solutions } from "@/content/solutions";
+import { differentials, solutions } from "@/content/solutions";
 import { isSafeExternalUrl, urlMatchesDate } from "@/lib/press";
 
 describe("matérias do News Rondônia", () => {
@@ -25,7 +25,7 @@ describe("matérias do News Rondônia", () => {
 describe("comunicação financeira responsável", () => {
   const forbidden = [/garantid/i, /lucro certo/i, /sem riscos?/i, /enriqueça/i, /aprovação garantida/i];
   it("os textos de soluções não fazem promessas proibidas", () => {
-    const text = solutions.flatMap((s) => [s.title, s.description, ...s.points]).join(" ");
+    const text = [...solutions, ...differentials].flatMap((s) => [s.title, s.text]).join(" ");
     for (const pattern of forbidden) expect(text).not.toMatch(pattern);
   });
 });

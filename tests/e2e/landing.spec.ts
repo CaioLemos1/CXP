@@ -1,0 +1,209 @@
+import AxeBuilder from "@axe-core/playwright";
+import { expect, test } from "@playwright/test";
+
+const WHATSAPP = "https://wa.me/5569992579620";
+
+test.describe("Landing page", () => {
+  test("carrega com título, logo e hero", async ({ page }) => {
+    await page.goto("/");
+    await expect(page).toHaveTitle(/CXP Crédito & Investimentos/);
+    await expect(page.getByRole("banner").getByRole("img", { name: "CXP Crédito & Investimentos" })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("Cresce com estratégia.");
+    await expect(page.locator("[data-cxp-stage]")).toBeAttached();
+    expect(await page.locator("h1").count()).toBe(1);
+  });
+
+  test("todas as seções obrigatórias existem na ordem da jornada", async ({ page }) => {
+    await page.goto("/");
+    const ids = await page.locator("main > section[id]").evaluateAll((els) => els.map((e) => e.id));
+    expect(ids).toEqual(["inicio", "quem-somos", "solucoes", "investimentos", "imprensa", "contato"]);
+    await expect(page.getByRole("heading", { name: "Quem Somos" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /matérias publicadas no jornal news rondônia/i })).toBeAttached();
+  });
+
+  test("CTA principal e demais botões abrem o WhatsApp oficial em nova aba", async ({ page }) => {
+    await page.goto("/");
+    const ctas = page.locator('a[href^="https://wa.me/"]');
+    expect(await ctas.count()).toBeGreaterThanOrEqual(10);
+    for (const link of await ctas.all()) {
+      const href = (await link.getAttribute("href")) ?? "";
+      expect(href.startsWith(WHATSAPP)).toBe(true);
+      expect(new URL(href).searchParams.get("text")).toMatch(/^Olá! Conheci a CXP pelo site/);
+      await expect(link).toHaveAttribute("target", "_blank");
+      await expect(link).toHaveAttribute("rel", /noopener/);
+    }
+    const hero = page.locator('[data-cta="hero"]');
+    await expect(hero).toContainText(/fale com um especialista/i);
+    const final = page.locator('[data-cta="cta-final"]');
+    await expect(final).toContainText(/conversar com a equipe no whatsapp/i);
+    expect(new URL((await final.getAttribute("href")) ?? "").searchParams.get("text")).toBe(
+      "Olá! Conheci a CXP pelo site e gostaria de conversar com a equipe sobre planejamento financeiro e soluções para meus objetivos.",
+    );
+  });
+
+  test("clique no WhatsApp abre um popup apontando para wa.me", async ({ page, context }) => {
+    await context.route("https://wa.me/**", (route) => route.fulfill({ status: 200, body: "ok" }));
+    await page.goto("/");
+    const [popup] = await Promise.all([page.waitForEvent("popup"), page.locator('[data-cta="hero"]').click()]);
+    expect(popup.url()).toContain("wa.me/5569992579620");
+  });
+
+  test("'Conheça a CXP' navega até Quem Somos", async ({ page }) => {
+    await page.goto("/");
+    await page.getByRole("link", { name: /conheça a cxp/i }).click();
+    await expect(page).toHaveURL(/#quem-somos$/);
+    await expect(page.locator("#quem-somos")).toBeInViewport();
+  });
+
+  test("seis matérias com links externos seguros", async ({ page }) => {
+    await page.goto("/");
+    const links = page.locator("a[data-press]");
+    await expect(links).toHaveCount(6);
+    for (const link of await links.all()) {
+      await expect(link).toHaveAttribute(
+        "href",
+        /^https:\/\/newsrondonia\.com\.br\/noticias\/2025\/\d{2}\/\d{2}\/.+\/$/,
+      );
+      await expect(link).toHaveAttribute("target", "_blank");
+      await expect(link).toHaveAttribute("rel", "noopener noreferrer");
+      await expect(link).toContainText(/ler matéria/i);
+    }
+  });
+
+  test("fotografia do casal ao lado do texto Quem Somos", async ({ page }) => {
+    await page.goto("/#quem-somos");
+    const img = page.locator("#quem-somos img");
+    await expect(img).toHaveAttribute("alt", /Pedro Fonseca e Cristiana Fonseca/);
+    await expect(page.locator('[data-placeholder="casal"]')).toHaveCount(0);
+    await expect.poll(() => img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true);
+  });
+
+  test("fotografia do Pedro no CTA final", async ({ page }) => {
+    await page.goto("/#contato");
+    const img = page.locator("#contato img");
+    await expect(img).toHaveAttribute("alt", /Pedro Fonseca/);
+    await expect(img).toHaveAttribute("loading", "lazy");
+    await expect.poll(() => img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true);
+  });
+
+  test("simulador recalcula ao mudar o prazo", async ({ page }) => {
+    await page.goto("/#investimentos");
+    const total = page.getByTestId("sim-total");
+    const before = await total.textContent();
+    await page.getByLabel("Prazo").fill("30");
+    await expect(total).not.toHaveText(before ?? "");
+    await expect(page.getByText(/simulação matemática com taxa constante/i)).toBeVisible();
+  });
+
+  test("sem rolagem horizontal", async ({ page }) => {
+    await page.goto("/");
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+    expect(overflow).toBeLessThanOrEqual(0);
+  });
+
+  test("sem violações de acessibilidade graves (axe, WCAG 2.2 AA)", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/");
+    await page.evaluate(async () => {
+      for (let y = 0; y < document.body.scrollHeight; y += 500) {
+        window.scrollTo(0, y);
+        await new Promise((r) => setTimeout(r, 40));
+      }
+    });
+    const results = await new AxeBuilder({ page })
+      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
+      .analyze();
+    const serious = results.violations.filter((v) => v.impact === "serious" || v.impact === "critical");
+    expect(serious.map((v) => `${v.id}: ${v.nodes.length} — ${v.nodes[0]?.target}`)).toEqual([]);
+  });
+
+  test("SEO: metadados, canonical, OG, JSON-LD, sitemap e robots", async ({ page, request }) => {
+    await page.goto("/");
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", /.{80,}/);
+    await expect(page.locator('link[rel="canonical"]')).toHaveCount(1);
+    await expect(page.locator('meta[property="og:image"]')).toHaveCount(1);
+    await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute("content", "summary_large_image");
+    const jsonLd = JSON.parse((await page.locator('script[type="application/ld+json"]').textContent()) ?? "{}");
+    expect(jsonLd["@type"]).toBe("FinancialService");
+    expect((await request.get("/sitemap.xml")).status()).toBe(200);
+    expect(await (await request.get("/robots.txt")).text()).toContain("Sitemap:");
+    expect((await request.get("/og.jpg")).status()).toBe(200);
+  });
+});
+
+test.describe("Páginas legais", () => {
+  for (const [path, title] of [
+    ["/politica-de-privacidade", "Política de Privacidade"],
+    ["/termos-e-condicoes", "Termos e Condições"],
+  ] as const) {
+    test(`${path} existe e é acessível pelo rodapé`, async ({ page }) => {
+      await page.goto("/");
+      await page.getByRole("contentinfo").getByRole("link", { name: title }).click();
+      await expect(page).toHaveURL(new RegExp(`${path}/?$`));
+      await expect(page.getByRole("heading", { level: 1, name: title })).toBeVisible();
+      await expect(page.getByText(/revisão jurídica/i)).toBeVisible();
+    });
+  }
+});
+
+test.describe("Navegação mobile", () => {
+  test.skip(({ isMobile }) => !isMobile, "apenas mobile");
+
+  test("menu abre, navega, fecha com Esc e devolve o foco", async ({ page }) => {
+    await page.goto("/");
+    const toggle = page.getByRole("button", { name: "Abrir menu" });
+    await toggle.click();
+    const menu = page.locator("#menu-mobile");
+    await expect(menu).toBeVisible();
+    await expect(page.getByRole("button", { name: "Fechar menu" })).toHaveAttribute("aria-expanded", "true");
+    await page.keyboard.press("Escape");
+    await expect(menu).toBeHidden();
+    await expect(page.getByRole("button", { name: "Abrir menu" })).toBeFocused();
+    await page.getByRole("button", { name: "Abrir menu" }).click();
+    await menu.getByRole("link", { name: "Soluções" }).click();
+    await expect(menu).toBeHidden();
+    await expect(page).toHaveURL(/#solucoes$/);
+  });
+
+  test("carrossel de imprensa avança com o botão", async ({ page }) => {
+    await page.goto("/#imprensa");
+    const next = page.getByRole("button", { name: "Próxima matéria" });
+    await next.scrollIntoViewIfNeeded();
+    await next.click();
+    await expect(page.getByText("02 / 06")).toBeVisible();
+  });
+});
+
+test.describe("Desktop", () => {
+  test.skip(({ isMobile }) => isMobile, "apenas desktop");
+
+  test("letras CXP reagem ao cursor e voltam ao repouso", async ({ page }) => {
+    await page.goto("/", { waitUntil: "networkidle" });
+    const stage = page.locator("[data-cxp-stage]");
+    const transform = () => stage.evaluate((el) => (el as HTMLElement).style.transform);
+    await page.mouse.move(700, 450);
+    await page.mouse.move(1350, 780, { steps: 12 });
+    await expect.poll(transform).toContain("rotateY");
+    expect(await transform()).not.toContain("rotateY(0deg)");
+    // ao sair da hero, as letras interpolam de volta para a posição inicial
+    await page.mouse.move(700, 450, { steps: 4 });
+    await page.dispatchEvent("[data-hero]", "pointerleave");
+    await expect.poll(transform, { timeout: 5000 }).toMatch(/rotateY\(-?0(\.0+\d*)?deg\)|rotateY\(-?\d\.\d+e-\d+deg\)/);
+  });
+
+  test("letras CXP ficam estáticas com movimento reduzido", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/");
+    await page.mouse.move(1300, 700);
+    await page.waitForTimeout(300);
+    expect(await page.locator("[data-cxp-stage]").evaluate((el) => (el as HTMLElement).style.transform)).toBe("");
+  });
+
+  test("navegação por teclado: link para pular conteúdo e foco visível", async ({ page }) => {
+    await page.goto("/");
+    await page.keyboard.press("Tab");
+    const skip = page.getByRole("link", { name: "Pular para o conteúdo" });
+    await expect(skip).toBeFocused();
+    await expect(skip).toBeVisible();
+  });
+});

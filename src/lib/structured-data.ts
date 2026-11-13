@@ -14,10 +14,7 @@ export function buildOrganizationJsonLd(config: SiteConfig) {
     email: config.contact.email,
     telephone: `+${config.contact.whatsapp}`,
     areaServed: { "@type": "State", name: "Rondônia" },
-    founder: [
-      { "@type": "Person", name: config.people.founder },
-      { "@type": "Person", name: config.people.cofounder },
-    ],
+    founder: [{ "@type": "Person", name: config.people.founder }],
     ...(sameAs.length ? { sameAs } : {}),
     ...(config.contact.address ? { address: config.contact.address } : {}),
     ...(config.legal.cnpj ? { taxID: config.legal.cnpj } : {}),

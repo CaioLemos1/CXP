@@ -1,23 +1,23 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
-const WHATSAPP = "https://wa.me/5569992579620";
+const WHATSAPP = /^https:\/\/wa\.me\/(5569993540460|5569992162700)(\?|$)/;
 
 test.describe("Landing page", () => {
   test("carrega com título, logo e hero", async ({ page }) => {
     await page.goto("/");
     await expect(page).toHaveTitle(/CXP Crédito & Investimentos/);
     await expect(page.getByRole("banner").getByRole("img", { name: "CXP Crédito & Investimentos" })).toBeVisible();
-    await expect(page.getByRole("heading", { level: 1 })).toContainText("Estratégia, experiência e patrimônio");
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("Antes do crédito, vem o conhecimento.");
     expect(await page.locator("h1").count()).toBe(1);
   });
 
   test("todas as seções obrigatórias existem na ordem da jornada", async ({ page }) => {
     await page.goto("/");
     const ids = await page.locator("main > section[id]").evaluateAll((els) => els.map((e) => e.id));
-    expect(ids).toEqual(["inicio", "servicos", "sobre", "diferenciais", "imprensa", "contato"]);
+    expect(ids).toEqual(["inicio", "solucoes", "sobre", "resultados", "imprensa", "contato"]);
     await expect(page.getByRole("heading", { name: "Nossas Soluções" })).toBeAttached();
-    await expect(page.getByRole("heading", { name: "Por que escolher a CXP?" })).toBeAttached();
+    await expect(page.getByRole("heading", { name: "Nossos Resultados" })).toBeAttached();
     await expect(page.getByRole("heading", { name: /matérias publicadas no jornal news rondônia/i })).toBeAttached();
   });
 
@@ -27,13 +27,13 @@ test.describe("Landing page", () => {
     expect(await ctas.count()).toBeGreaterThanOrEqual(6);
     for (const link of await ctas.all()) {
       const href = (await link.getAttribute("href")) ?? "";
-      expect(href.startsWith(WHATSAPP)).toBe(true);
+      expect(href).toMatch(WHATSAPP);
       expect(new URL(href).searchParams.get("text")).toMatch(/^Olá! Conheci a CXP pelo site/);
       await expect(link).toHaveAttribute("target", "_blank");
       await expect(link).toHaveAttribute("rel", /noopener/);
     }
     const final = page.locator('[data-cta="cta-final"]');
-    await expect(final).toContainText(/fale com a cxp/i);
+    await expect(final).toContainText(/falar com pedro/i);
     expect(new URL((await final.getAttribute("href")) ?? "").searchParams.get("text")).toBe(
       "Olá! Conheci a CXP pelo site e gostaria de conversar com a equipe sobre planejamento financeiro e soluções para meus objetivos.",
     );
@@ -43,14 +43,14 @@ test.describe("Landing page", () => {
     await context.route("https://wa.me/**", (route) => route.fulfill({ status: 200, body: "ok" }));
     await page.goto("/");
     const [popup] = await Promise.all([page.waitForEvent("popup"), page.locator('[data-cta="cta-final"]').click()]);
-    expect(popup.url()).toContain("wa.me/5569992579620");
+    expect(popup.url()).toContain("wa.me/5569993540460");
   });
 
-  test("'Conheça nossas soluções' navega até Serviços", async ({ page }) => {
+  test("'Conheça nossas soluções' navega até Soluções", async ({ page }) => {
     await page.goto("/");
     await page.getByRole("link", { name: /conheça nossas soluções/i }).click();
-    await expect(page).toHaveURL(/#servicos$/);
-    await expect(page.locator("#servicos")).toBeInViewport();
+    await expect(page).toHaveURL(/#solucoes$/);
+    await expect(page.locator("#solucoes")).toBeInViewport();
   });
 
   test("seis matérias com links externos seguros", async ({ page }) => {
@@ -74,9 +74,25 @@ test.describe("Landing page", () => {
     await expect(hero).toHaveAttribute("alt", /Pedro Fonseca/);
     await expect.poll(() => hero.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true);
     await page.locator("#sobre").scrollIntoViewIfNeeded();
-    const about = page.locator("#sobre img");
+    const about = page.locator("#sobre img").first();
     await expect(about).toHaveAttribute("loading", "lazy");
     await expect.poll(() => about.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true);
+  });
+
+  test("contatos do portfólio: Pedro, Matheus, Instagram e endereço", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.locator('[data-cta="cta-final"]')).toHaveAttribute("href", /wa\.me\/5569993540460\?/);
+    await expect(page.locator('[data-cta="cta-final-matheus-torrente"]')).toHaveAttribute(
+      "href",
+      /wa\.me\/5569992162700\?/,
+    );
+    const footer = page.getByRole("contentinfo");
+    await expect(footer).toContainText("(69) 99354-0460 · Pedro Fonseca");
+    await expect(footer).toContainText("(69) 99216-2700 · Matheus Torrente");
+    await expect(footer).toContainText("Av. Campos Sales, nº 2437 – Centro");
+    await expect(footer).toContainText("@cxpinvestimentos");
+    await expect(page.getByText("Não vendemos consórcios.")).toBeAttached();
+    await expect(page.getByText("CORECON-RO nº 782")).toBeAttached();
   });
 
   test("sem rolagem horizontal", async ({ page }) => {
@@ -144,9 +160,9 @@ test.describe("Navegação mobile", () => {
     await expect(menu).toBeHidden();
     await expect(page.getByRole("button", { name: "Abrir menu" })).toBeFocused();
     await page.getByRole("button", { name: "Abrir menu" }).click();
-    await menu.getByRole("link", { name: "Serviços" }).click();
+    await menu.getByRole("link", { name: "Soluções" }).click();
     await expect(menu).toBeHidden();
-    await expect(page).toHaveURL(/#servicos$/);
+    await expect(page).toHaveURL(/#solucoes$/);
   });
 });
 

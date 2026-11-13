@@ -8,6 +8,7 @@ type IconProps = {
     | "arrow-right"
     | "instagram"
     | "mail"
+    | "pin"
     | "menu"
     | "close"
     | "chevron-left"
@@ -46,39 +47,45 @@ function IconPaths({ name }: { name: IconProps["name"] }) {
           <path d="M12 15v3" />
         </>
       );
-    case "seal":
-      return (
-        <>
-          <circle cx="12" cy="10" r="6" />
-          <path d="m9.5 10 1.75 1.75L14.75 8.5" />
-          <path d="M8.5 15 7 21l5-2.5 5 2.5-1.5-6" />
-        </>
-      );
-    case "podium":
-      return (
-        <>
-          <rect x="9" y="3" width="6" height="9" rx="3" />
-          <path d="M6 11a6 6 0 0 0 12 0M12 17v4M8 21h8" />
-        </>
-      );
     case "whatsapp":
       return (
         <path d="M12 2.2a9.75 9.75 0 0 0-8.4 14.7L2.3 21.8l5-1.3A9.75 9.75 0 1 0 12 2.2Zm0 17.8a8.05 8.05 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.07 8.07 0 1 1 12 20Zm4.4-6c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.5.1l-.8 1c-.1.2-.3.2-.5.1a6.6 6.6 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5a.9.9 0 0 0-.6.3 2.7 2.7 0 0 0-.9 2 4.7 4.7 0 0 0 1 2.5 10.8 10.8 0 0 0 4.1 3.6c1.5.7 2.1.7 2.9.6a2.4 2.4 0 0 0 1.6-1.1 2 2 0 0 0 .1-1.1c0-.1-.2-.2-.4-.3Z" />
       );
-    case "diamond":
+    case "book":
       return (
         <>
-          <path d="M6 4h12l3 5-9 11L3 9z" />
-          <path d="M3 9h18M9 4l3 5 3-5M9 9l3 11 3-11" />
+          <path d="M12 6.5C10 5 7 4.5 3 5v13c4-.5 7 0 9 1.5 2-1.5 5-2 9-1.5V5c-4-.5-7 0-9 1.5Z" />
+          <path d="M12 6.5v13" />
         </>
       );
-    case "target":
+    case "coins":
       return (
         <>
-          <circle cx="12" cy="12" r="9" />
-          <circle cx="12" cy="12" r="5" />
-          <circle cx="12" cy="12" r="1.2" />
-          <path d="m12 12 7-7M16 5h3v3" />
+          <ellipse cx="12" cy="6.5" rx="7" ry="2.5" />
+          <path d="M5 6.5v4c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-4" />
+          <path d="M5 10.5v4c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-4" />
+          <path d="M5 14.5v3c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-3" />
+        </>
+      );
+    case "calendar":
+      return (
+        <>
+          <rect x="3.5" y="5" width="17" height="15" rx="2" />
+          <path d="M3.5 10h17M8 3v4M16 3v4M8 14h2M14 14h2M8 17h2" />
+        </>
+      );
+    case "layers":
+      return (
+        <>
+          <path d="m12 3 9 5-9 5-9-5z" />
+          <path d="m3 12 9 5 9-5M3 16l9 5 9-5" />
+        </>
+      );
+    case "pin":
+      return (
+        <>
+          <path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11Z" />
+          <circle cx="12" cy="10" r="2.3" />
         </>
       );
     case "handshake":

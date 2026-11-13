@@ -15,10 +15,12 @@ Tudo o que é configurável fica em **`src/config/site.ts`**. Itens que não con
 | -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `images.hero` / `images.about` | ✅ Fotos do Pedro Fonseca (`public/images/pedro-hero.jpg`, `pedro-leitura.jpg`). | — |
 | `images.logo` | ✅ Logo oficial branca com fundo transparente (`public/images/logo-cxp.png`, 709×362 px). Para nitidez máxima em telas grandes, a versão SVG pode substituí-la no futuro. | — |
-| `contact.whatsappConfirmed`                                    | O número (69) 99257-9620 vem do portfólio.                                                                                                                        | Confirmar que é o WhatsApp de atendimento e mudar para `true`.                                                                                                     |
+| Contatos | ✅ Portfólio Comercial 3.0: (69) 99354-0460 (Pedro, principal) e (69) 99216-2700 (Matheus), @cxpinvestimentos. | — |
+| `contact.address` | Av. Campos Sales, nº 2437 – Centro (portfólio). A cidade/UF "Porto Velho – RO" foi acrescentada por nós. | Confirmar. |
+| `contact.email` | O Portfólio 3.0 não traz e-mail; mantido o do portfólio anterior (usado no rodapé e nas páginas legais). | Confirmar ou substituir. |
+| Foto do Matheus | Recorte em baixa resolução extraído do PDF do portfólio (avatar pequeno). | Enviar foto original e substituir `public/images/matheus-torrente.jpg`. |
 | `url`                                                          | Usa `NEXT_PUBLIC_SITE_URL`.                                                                                                                                       | Definir o domínio oficial (ver `.env.example`).                                                                                                                    |
-| `legal.cnpj`, `legal.dataProtectionOfficer`, `contact.address` | Não informados.                                                                                                                                                   | Preencher. Enquanto `null`, ficam fora da interface e aparecem como `[a preencher]` nas páginas legais.                                                            |
-| Instagram                                                      | O slide grafa `@cpxinvestimentos`; o perfil ativo é `cxpinvestimentos`.                                                                                           | Confirmar.                                                                                                                                                         |
+| `legal.cnpj`, `legal.dataProtectionOfficer` | Não informados. | Preencher. Enquanto `null`, aparecem como `[a preencher]` nas páginas legais. |
 | Páginas legais                                                 | Minutas.                                                                                                                                                          | **Revisão jurídica obrigatória** antes da publicação.                                                                                                              |
 
 O teste `tests/unit/config.test.ts` lista essas pendências e falha se algum dado ficar inválido (telefone, e-mail, URL, CNPJ).
@@ -26,7 +28,8 @@ O teste `tests/unit/config.test.ts` lista essas pendências e falha se algum dad
 ### Conteúdo editável
 
 - `src/content/press.ts` — matérias do News Rondônia (adicione `excerpt` ou `image` só com confirmação e autorização).
-- `src/content/solutions.ts` — soluções e diferenciais (textos curtos).
+- `src/content/solutions.ts` — soluções, resultados e trajetória (Portfólio Comercial 3.0).
+- `src/config/site.ts` → `team` — Pedro Fonseca e Matheus Torrente (cargos, bio, frase, WhatsApp).
 
 ---
 
@@ -93,7 +96,7 @@ src/
   components/
     layout/               Header, Footer, LegalPage
     sections/             HeroSection, SolutionsSection, AboutSection,
-                          DifferentialsSection, PressSection, FinalCTA
+                          TeamCards, ResultsSection, PressSection, FinalCTA
     ui/                   WhatsAppButton, Reveal, MotionProvider, Icon, Logo, CurrentYear
   config/site.ts          configuração central (contato, WhatsApp, imagens, dados legais)
   content/                textos e dados das seções

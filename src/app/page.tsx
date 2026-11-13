@@ -1,10 +1,10 @@
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { AboutSection } from "@/components/sections/AboutSection";
-import { DifferentialsSection } from "@/components/sections/DifferentialsSection";
 import { FinalCTA } from "@/components/sections/FinalCTA";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { PressSection } from "@/components/sections/PressSection";
+import { ResultsSection } from "@/components/sections/ResultsSection";
 import { SolutionsSection } from "@/components/sections/SolutionsSection";
 import { MotionProvider } from "@/components/ui/MotionProvider";
 
@@ -16,7 +16,7 @@ export default function HomePage() {
         <HeroSection />
         <SolutionsSection />
         <AboutSection />
-        <DifferentialsSection />
+        <ResultsSection />
         <PressSection />
         <FinalCTA />
       </main>

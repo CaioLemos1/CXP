@@ -45,10 +45,10 @@ describe("SolutionsSection", () => {
   it("cada solução tem link de WhatsApp com mensagem contextual", () => {
     withMotion(<SolutionsSection />);
     const ctas = screen.getAllByRole("link", { name: /saiba mais/i });
-    expect(ctas).toHaveLength(3);
+    expect(ctas).toHaveLength(4);
     const messages = ctas.map((a) => new URL(a.getAttribute("href") ?? "").searchParams.get("text"));
-    expect(new Set(messages).size).toBe(3);
-    expect(messages[0]).toContain("consórcios");
+    expect(new Set(messages).size).toBe(4);
+    expect(messages[2]).toContain("Consórcios");
   });
 });
 

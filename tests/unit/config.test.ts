@@ -2,11 +2,12 @@ import { describe, expect, it } from "vitest";
 import { type SiteConfig, siteConfig } from "@/config/site";
 import { hasBlockingIssues, validateSiteConfig } from "@/lib/config-validation";
 import { buildOrganizationJsonLd } from "@/lib/structured-data";
+import { normalizeBrazilianPhone } from "@/lib/whatsapp";
 
 const complete: SiteConfig = {
   ...siteConfig,
   url: "https://www.exemplo.com.br",
-  contact: { ...siteConfig.contact, whatsappConfirmed: true, address: "Rua Exemplo, 1" },
+  contact: { ...siteConfig.contact, address: "Rua Exemplo, 1" },
   legal: { ...siteConfig.legal, cnpj: "00.000.000/0001-00", dataProtectionOfficer: "Fulana" },
 };
 
@@ -17,21 +18,14 @@ describe("validateSiteConfig", () => {
 
   it("lista as pendências conhecidas da configuração atual", () => {
     const fields = validateSiteConfig({ ...siteConfig, url: "http://localhost:3000" }).map((i) => i.field);
-    expect(fields).toEqual(
-      expect.arrayContaining([
-        "contact.whatsappConfirmed",
-        "url",
-        "legal.cnpj",
-        "legal.dataProtectionOfficer",
-        "contact.address",
-      ]),
-    );
+    expect(fields).toEqual(expect.arrayContaining(["url", "legal.cnpj", "legal.dataProtectionOfficer"]));
   });
 
   it("descreve cada pendência com severidade e mensagem", () => {
     const issues = validateSiteConfig({
       ...siteConfig,
       url: "http://localhost:3000",
+      contact: { ...siteConfig.contact, whatsappConfirmed: false, address: null },
     });
     expect(issues.map(({ field, severity }) => `${field}:${severity}`)).toEqual([
       "contact.whatsappConfirmed:pending",
@@ -93,12 +87,9 @@ describe("buildOrganizationJsonLd", () => {
       image: "https://www.exemplo.com.br/images/pedro-hero.jpg",
       description: complete.description,
       email: "timecpconsultoria@gmail.com",
-      telephone: "+5569992579620",
+      telephone: "+5569993540460",
       areaServed: { "@type": "State", name: "Rondônia" },
-      founder: [
-        { "@type": "Person", name: "Pedro Fonseca" },
-        { "@type": "Person", name: "Cristiana Fonseca" },
-      ],
+      founder: [{ "@type": "Person", name: "Pedro Fonseca" }],
       sameAs: ["https://www.instagram.com/cxpinvestimentos/"],
       address: "Rua Exemplo, 1",
       taxID: "00.000.000/0001-00",
@@ -107,16 +98,34 @@ describe("buildOrganizationJsonLd", () => {
   it("usa apenas dados configurados e omite campos ausentes", () => {
     const data = buildOrganizationJsonLd(siteConfig);
     expect(data["@type"]).toBe("FinancialService");
-    expect(data.telephone).toBe("+5569992579620");
+    expect(data.telephone).toBe("+5569993540460");
     expect(data).not.toHaveProperty("taxID");
-    expect(data).not.toHaveProperty("address");
+    expect(data.address).toBe("Av. Campos Sales, nº 2437 – Centro, Porto Velho – RO");
     expect(data.sameAs).toEqual(["https://www.instagram.com/cxpinvestimentos/"]);
   });
   it("inclui CNPJ e endereço quando preenchidos", () => {
     const data = buildOrganizationJsonLd(complete);
     expect(data).toMatchObject({ taxID: "00.000.000/0001-00", address: "Rua Exemplo, 1" });
   });
+  it("omite endereço quando não informado", () => {
+    const data = buildOrganizationJsonLd({ ...complete, contact: { ...complete.contact, address: null } });
+    expect(data).not.toHaveProperty("address");
+  });
   it("omite sameAs sem Instagram", () => {
     expect(buildOrganizationJsonLd({ ...complete, social: { instagram: null } })).not.toHaveProperty("sameAs");
+  });
+});
+
+describe("dados do Portfólio Comercial 3.0", () => {
+  it("contatos oficiais", () => {
+    expect(siteConfig.contact.whatsapp).toBe("5569993540460");
+    expect(siteConfig.team.map((p) => [p.name, p.whatsapp])).toEqual([
+      ["Pedro Fonseca", "5569993540460"],
+      ["Matheus Torrente", "5569992162700"],
+    ]);
+    expect(siteConfig.social.instagram?.handle).toBe("@cxpinvestimentos");
+  });
+  it("todos os telefones da equipe são válidos", () => {
+    for (const person of siteConfig.team) expect(normalizeBrazilianPhone(person.whatsapp)).toBe(person.whatsapp);
   });
 });

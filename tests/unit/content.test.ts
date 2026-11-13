@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { PRESS_HOSTS, pressArticles } from "@/content/press";
-import { differentials, solutions } from "@/content/solutions";
+import { results, solutions, timeline } from "@/content/solutions";
 import { isSafeExternalUrl, urlMatchesDate } from "@/lib/press";
 
 describe("matérias do News Rondônia", () => {
@@ -25,7 +25,29 @@ describe("matérias do News Rondônia", () => {
 describe("comunicação financeira responsável", () => {
   const forbidden = [/garantid/i, /lucro certo/i, /sem riscos?/i, /enriqueça/i, /aprovação garantida/i];
   it("os textos de soluções não fazem promessas proibidas", () => {
-    const text = [...solutions, ...differentials].flatMap((s) => [s.title, s.text]).join(" ");
+    const text = [...solutions, ...results, ...timeline].flatMap((s) => Object.values(s)).join(" ");
     for (const pattern of forbidden) expect(text).not.toMatch(pattern);
+  });
+});
+
+describe("conteúdo do Portfólio Comercial 3.0", () => {
+  it("quatro soluções, na ordem do portfólio", () => {
+    expect(solutions.map((s) => s.title)).toEqual([
+      "Educação e Planejamento Financeiro",
+      "Crédito e Soluções Financeiras",
+      "Consórcios",
+      "Estratégias Patrimoniais",
+    ]);
+  });
+  it("números de resultados idênticos ao portfólio", () => {
+    expect(results.map((r) => `${r.prefix ?? ""}|${r.value}|${r.unit ?? ""}`)).toEqual([
+      "+|25|milhões",
+      "+|20|instituições",
+      "Desde|2017|",
+      "|2024|",
+    ]);
+  });
+  it("trajetória em três marcos", () => {
+    expect(timeline.map((t) => t.label)).toEqual(["2017", "Evolução", "Hoje"]);
   });
 });

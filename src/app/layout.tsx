@@ -4,9 +4,9 @@ import { buildOrganizationJsonLd } from "@/lib/structured-data";
 import { montserrat, playfair } from "./fonts";
 import "./globals.css";
 
-const title = "CXP Crédito & Investimentos | Estratégia para construir e multiplicar patrimônio";
+const title = "CXP Crédito & Investimentos | Antes do crédito, vem o conhecimento";
 const description =
-  "Consórcios, cartas contempladas, consultoria para empresários e investidores e educação financeira em Rondônia. Fale com um especialista da CXP pelo WhatsApp.";
+  "Soluções em crédito, consórcios, educação e planejamento financeiro em Porto Velho – RO. Converse com a CXP pelo WhatsApp sobre os seus objetivos.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -15,11 +15,11 @@ export const metadata: Metadata = {
   applicationName: siteConfig.name,
   keywords: [
     "CXP Crédito & Investimentos",
+    "crédito Porto Velho",
     "consórcio Porto Velho",
-    "cartas contempladas",
     "educação financeira Rondônia",
-    "planejamento patrimonial",
-    "consultoria para empresários",
+    "planejamento financeiro",
+    "estratégias patrimoniais",
   ],
   authors: [{ name: siteConfig.name }],
   alternates: { canonical: "/" },

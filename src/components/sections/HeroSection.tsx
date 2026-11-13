@@ -64,21 +64,20 @@ export function HeroSection() {
 
       <div className="container-x relative">
         <div className="-mt-24 max-w-xl pb-16 lg:mt-0 lg:flex lg:min-h-[44rem] lg:flex-col lg:justify-center lg:pb-0 lg:pt-28">
-          <p className="eyebrow animate-[fade-up_0.9s_var(--ease-out-expo)_both] text-white/85">
-            CXP Crédito &amp; Investimentos
+          <p className="eyebrow animate-[fade-up_0.9s_var(--ease-out-expo)_both] text-[0.7rem] text-gold-soft sm:text-[0.78rem]">
+            Crédito · Consórcios · Educação · Planejamento
           </p>
           <h1
             id="hero-title"
             className="heading mt-5 animate-[fade-up_0.9s_var(--ease-out-expo)_0.1s_both] text-[clamp(2.4rem,5vw,3.9rem)]"
           >
-            Estratégia, experiência e <em className="font-semibold italic text-gold">patrimônio</em>
+            Antes do crédito, vem o <em className="font-semibold italic text-gold">conhecimento.</em>
           </h1>
           <p className="mt-6 max-w-md animate-[fade-up_0.9s_var(--ease-out-expo)_0.2s_both] text-[1.05rem] leading-relaxed text-white/80">
-            Consórcios, cartas contempladas e educação financeira para construir e multiplicar o seu patrimônio com
-            planejamento.
+            Seu futuro financeiro começa com boas decisões.
           </p>
           <a
-            href="#servicos"
+            href="#solucoes"
             className="group mt-9 inline-flex h-13 w-fit animate-[fade-up_0.9s_var(--ease-out-expo)_0.3s_both] items-center gap-3 rounded-md bg-gradient-to-b from-gold-soft to-gold px-7 py-3.5 font-semibold text-navy shadow-[0_10px_30px_-12px_rgba(200,164,98,0.7)] transition-transform duration-300 hover:-translate-y-0.5"
           >
             Conheça nossas soluções

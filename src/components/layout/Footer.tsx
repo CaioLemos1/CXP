@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { navigation, siteConfig } from "@/config/site";
 import { formatPhoneBR } from "@/lib/format";
-import { whatsappUrl } from "@/lib/links";
+import { whatsappPersonUrl } from "@/lib/links";
 import { CurrentYear } from "../ui/CurrentYear";
 import { Icon } from "../ui/Icon";
 import { Logo } from "../ui/Logo";
@@ -40,19 +40,21 @@ export function Footer({ variant = "home" }: { variant?: "home" | "inner" }) {
         </nav>
 
         <ul className="space-y-3 text-sm">
-          <li>
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-cta="rodape"
-              className="inline-flex items-center gap-3 text-white/80 transition-colors hover:text-gold-soft"
-            >
-              <Icon name="whatsapp" className="size-4" />
-              {formatPhoneBR(siteConfig.contact.whatsapp)}
-              <span className="sr-only"> no WhatsApp (abre em nova aba)</span>
-            </a>
-          </li>
+          {siteConfig.team.map((person) => (
+            <li key={person.id}>
+              <a
+                href={whatsappPersonUrl(person.whatsapp)}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-cta={`rodape-${person.id}`}
+                className="inline-flex items-center gap-3 text-white/80 transition-colors hover:text-gold-soft"
+              >
+                <Icon name="whatsapp" className="size-4" />
+                {formatPhoneBR(person.whatsapp)} · {person.name}
+                <span className="sr-only"> no WhatsApp (abre em nova aba)</span>
+              </a>
+            </li>
+          ))}
           <li>
             <a
               href={`mailto:${siteConfig.contact.email}`}
@@ -76,7 +78,12 @@ export function Footer({ variant = "home" }: { variant?: "home" | "inner" }) {
               </a>
             </li>
           )}
-          {siteConfig.contact.address && <li className="text-white/70">{siteConfig.contact.address}</li>}
+          {siteConfig.contact.address && (
+            <li className="flex items-start gap-3 text-white/80">
+              <Icon name="pin" className="mt-0.5 size-4 shrink-0" />
+              {siteConfig.contact.address}
+            </li>
+          )}
         </ul>
       </div>
 

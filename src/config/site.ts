@@ -7,6 +7,18 @@
  * Valores `null` são omitidos automaticamente da interface.
  */
 
+export type TeamMember = {
+  id: string;
+  name: string;
+  roles: string[];
+  bio: string;
+  quote: string;
+  credentials: string[];
+  /** WhatsApp direto (DDI + DDD, apenas dígitos). */
+  whatsapp: string;
+  photo: { src: string; width: number; height: number };
+};
+
 export type SiteConfig = {
   name: string;
   shortName: string;
@@ -17,12 +29,12 @@ export type SiteConfig = {
   url: string;
   region: string;
   contact: {
-    /** Número com DDI + DDD, apenas dígitos. Fonte: portfólio institucional (slide de contato). */
+    /** WhatsApp principal (DDI + DDD, apenas dígitos). Fonte: Portfólio Comercial 3.0, "Fale Conosco". */
     whatsapp: string;
-    /** PENDENTE: confirmar se o número do portfólio é o WhatsApp oficial de atendimento. */
     whatsappConfirmed: boolean;
+    /** O Portfólio 3.0 não traz e-mail; mantido o do portfólio anterior. PENDENTE: confirmar. */
     email: string;
-    /** PENDENTE: endereço comercial não consta nos materiais enviados. */
+    /** Fonte: Portfólio Comercial 3.0. PENDENTE: confirmar cidade/UF (o portfólio cita só rua, número e bairro). */
     address: string | null;
   };
   social: {
@@ -40,8 +52,8 @@ export type SiteConfig = {
   };
   people: {
     founder: string;
-    cofounder: string;
   };
+  team: TeamMember[];
   messages: {
     default: string;
   };
@@ -59,20 +71,19 @@ const FALLBACK_URL = "http://localhost:3000";
 export const siteConfig: SiteConfig = {
   name: "CXP Crédito & Investimentos",
   shortName: "CXP",
-  tagline: "Realizando os sonhos da sua família e impulsionando seu patrimônio",
+  tagline: "Antes do crédito, vem o conhecimento.",
   description:
-    "Consórcios, cartas contempladas, consultoria para empresários e investidores e educação financeira para construir e multiplicar patrimônio com planejamento e inteligência financeira.",
+    "Soluções em crédito, consórcios, educação e planejamento financeiro. A CXP transforma conhecimento financeiro em oportunidades de crescimento e construção patrimonial.",
   locale: "pt_BR",
   url: (process.env.NEXT_PUBLIC_SITE_URL ?? FALLBACK_URL).replace(/\/+$/, ""),
   region: "Porto Velho · Rondônia",
   contact: {
-    whatsapp: "5569992579620",
-    whatsappConfirmed: false,
+    whatsapp: "5569993540460",
+    whatsappConfirmed: true,
     email: "timecpconsultoria@gmail.com",
-    address: null,
+    address: "Av. Campos Sales, nº 2437 – Centro, Porto Velho – RO",
   },
   social: {
-    // O slide do portfólio grafa "@cpxinvestimentos"; o perfil ativo no Instagram é "cxpinvestimentos".
     instagram: { handle: "@cxpinvestimentos", url: "https://www.instagram.com/cxpinvestimentos/" },
   },
   legal: {
@@ -80,12 +91,34 @@ export const siteConfig: SiteConfig = {
     cnpj: null,
     dataProtectionOfficer: null,
     privacyEmail: "timecpconsultoria@gmail.com",
-    lastUpdated: "2026-11-12",
+    lastUpdated: "2026-11-13",
   },
   people: {
     founder: "Pedro Fonseca",
-    cofounder: "Cristiana Fonseca",
   },
+  // Textos do Portfólio Comercial 3.0 (resumidos, sem alterar fatos).
+  team: [
+    {
+      id: "pedro-fonseca",
+      name: "Pedro Fonseca",
+      roles: ["CEO e fundador da CXP", "Empreendedor e Estrategista Financeiro"],
+      bio: "Com 25 anos de experiência profissional, construiu sua trajetória no empreendedorismo, na gestão comercial e no mercado financeiro. Em 2017, fundou a CP Assessoria de Crédito, base da CXP.",
+      quote: "Não se trata apenas de acessar recursos. Trata-se de saber como utilizá-los com inteligência.",
+      credentials: [],
+      whatsapp: "5569993540460",
+      photo: { src: "/images/pedro-avatar.jpg", width: 320, height: 320 },
+    },
+    {
+      id: "matheus-torrente",
+      name: "Matheus Torrente",
+      roles: ["Economista", "Especialista em Investimentos", "Educador Financeiro"],
+      bio: "Economista graduado pela Unir, conecta análise econômica, planejamento financeiro e visão patrimonial de longo prazo.",
+      quote: "Conhecimento econômico aplicado para multiplicar patrimônio com estratégia.",
+      credentials: ["CORECON-RO nº 782", "Autor de 2 livros", "Criador do App Torrente", "TV, Rádio e Podcast"],
+      whatsapp: "5569992162700",
+      photo: { src: "/images/matheus-torrente.jpg", width: 320, height: 320 },
+    },
+  ],
   messages: {
     default:
       "Olá! Conheci a CXP pelo site e gostaria de conversar com a equipe sobre planejamento financeiro e soluções para meus objetivos.",
@@ -99,9 +132,9 @@ export const siteConfig: SiteConfig = {
 
 export const navigation = [
   { href: "#inicio", label: "Início" },
-  { href: "#servicos", label: "Serviços" },
-  { href: "#sobre", label: "Sobre" },
-  { href: "#diferenciais", label: "Diferenciais" },
+  { href: "#solucoes", label: "Soluções" },
+  { href: "#sobre", label: "Quem Somos" },
+  { href: "#resultados", label: "Resultados" },
   { href: "#imprensa", label: "Imprensa" },
   { href: "#contato", label: "Contato" },
 ] as const;

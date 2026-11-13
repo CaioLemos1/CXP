@@ -90,7 +90,7 @@ export const siteConfig: SiteConfig = {
       "Olá! Conheci a CXP pelo site e gostaria de conversar com a equipe sobre planejamento financeiro e soluções para meus objetivos.",
   },
   images: {
-    logo: { src: "/images/logo-cxp.png", width: 733, height: 341 },
+    logo: { src: "/images/logo-cxp.png", width: 709, height: 362 },
     couple: { src: "/images/casal-pedro-cristiana.jpg", width: 1170, height: 1166 },
     founder: { src: "/images/pedro-fonseca.jpg", width: 720, height: 1280 },
   },

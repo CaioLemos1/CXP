@@ -89,7 +89,7 @@ export function Header({ variant = "home" }: { variant?: "home" | "inner" }) {
           className="relative z-10 shrink-0"
           aria-label="CXP Crédito & Investimentos — início"
         >
-          <Logo priority className="h-9 lg:h-11" />
+          <Logo priority className="h-11 lg:h-12" />
         </Link>
 
         <nav aria-label="Principal" className="hidden lg:block">

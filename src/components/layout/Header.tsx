@@ -84,49 +84,8 @@ export function Header({ variant = "home" }: { variant?: "home" | "inner" }) {
       )}
     >
       <div className="container-x flex h-[4.5rem] items-center justify-between gap-6 lg:h-[5.25rem]">
-        <Link
-          href={`${prefix}#inicio`}
-          className="relative z-10 shrink-0"
-          aria-label="CXP Crédito & Investimentos — início"
-        >
-          <Logo priority className="h-11 lg:h-12" />
-        </Link>
-
-        <nav aria-label="Principal" className="hidden lg:block">
-          <ul className="flex items-center gap-1 xl:gap-2">
-            {navigation.map((item) => {
-              const isActive = variant === "home" && active === item.href;
-              return (
-                <li key={item.href}>
-                  <a
-                    href={`${prefix}${item.href}`}
-                    aria-current={isActive ? "true" : undefined}
-                    className={cn(
-                      "relative px-3 py-2 text-[0.85rem] font-medium transition-colors duration-300",
-                      isActive ? "text-white" : "text-white/75 hover:text-white",
-                    )}
-                  >
-                    {item.label}
-                    <span
-                      aria-hidden
-                      className={cn(
-                        "absolute inset-x-3 -bottom-0.5 h-px origin-left bg-gold transition-transform duration-500 ease-[var(--ease-out-expo)]",
-                        isActive ? "scale-x-100" : "scale-x-0",
-                      )}
-                    />
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-
-        <div className="flex items-center gap-3">
-          <div className="hidden sm:block">
-            <WhatsAppButton trackingId="header" size="sm">
-              Fale Conosco
-            </WhatsAppButton>
-          </div>
+        {/* Esquerda: botão do menu (mobile) e navegação (desktop) */}
+        <div className="flex items-center">
           <button
             ref={toggleRef}
             type="button"
@@ -138,6 +97,51 @@ export function Header({ variant = "home" }: { variant?: "home" | "inner" }) {
           >
             <Icon name={open ? "close" : "menu"} className="size-5" />
           </button>
+
+          <nav aria-label="Principal" className="-ml-3 hidden lg:block">
+            <ul className="flex items-center gap-1 xl:gap-2">
+              {navigation.map((item) => {
+                const isActive = variant === "home" && active === item.href;
+                return (
+                  <li key={item.href}>
+                    <a
+                      href={`${prefix}${item.href}`}
+                      aria-current={isActive ? "true" : undefined}
+                      className={cn(
+                        "relative px-3 py-2 text-[0.85rem] font-medium transition-colors duration-300",
+                        isActive ? "text-white" : "text-white/75 hover:text-white",
+                      )}
+                    >
+                      {item.label}
+                      <span
+                        aria-hidden
+                        className={cn(
+                          "absolute inset-x-3 -bottom-0.5 h-px origin-left bg-gold transition-transform duration-500 ease-[var(--ease-out-expo)]",
+                          isActive ? "scale-x-100" : "scale-x-0",
+                        )}
+                      />
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+        </div>
+
+        {/* Direita: WhatsApp e logo */}
+        <div className="flex items-center gap-5">
+          <div className="hidden sm:block">
+            <WhatsAppButton trackingId="header" size="sm">
+              Fale Conosco
+            </WhatsAppButton>
+          </div>
+          <Link
+            href={`${prefix}#inicio`}
+            className="relative z-10 shrink-0"
+            aria-label="CXP Crédito & Investimentos — início"
+          >
+            <Logo priority className="h-11 lg:h-12" />
+          </Link>
         </div>
       </div>
 
